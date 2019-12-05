@@ -4,49 +4,62 @@ using System.Linq;
 
 namespace Day3
 {
+    class Koord
+    {
+        public int x;
+        public int y;
+        public int step;
+        public Koord(int _x, int _y) { x = _x; y = _y; }
+        public Koord(int _x, int _y, int _step) { x = _x; y = _y; step = _step; }        
+    }
     class Program
     {
-        static List<Tuple<int, int>> CreateRoute(/*List<bool> route, */string[] input)
+        static List<Koord> CreateRoute(string[] input)
         {
             int posx = 0;
             int posy = 0;
-            var _route = new List<Tuple<int,int>>();
+            int step = 0;
+            var _route = new List<Koord>();
             foreach (var message in input)
             {
                 char direction = message[0];
-                string coord=message.Remove(0, 1);
-                int distance = Convert.ToInt32(coord);
+                string coord = message.Remove(0, 1);
+                int distance = Convert.ToInt32(coord);               
                 switch (direction)
                 {
                     case 'R':
                         for (int i = 0; i < distance; i++)
                         {
+                            ++step;
                             ++posx;
-                            var pos = new Tuple<int, int>(posx,posy);
+                            var pos = new Koord(posx, posy, step);
                             _route.Add(pos);
                         }
                         break;
                     case 'L':
                         for (int i = 0; i < distance; i++)
                         {
+                            ++step;
                             --posx;
-                            var pos = new Tuple<int, int>(posx, posy);
+                            var pos = new Koord(posx, posy, step);
                             _route.Add(pos);
                         }
                         break;
                     case 'U':
                         for (int i = 0; i < distance; i++)
                         {
+                            ++step;
                             ++posy;
-                            var pos = new Tuple<int, int>(posx, posy);
+                            var pos = new Koord(posx, posy, step);
                             _route.Add(pos);
                         }
                         break;
                     case 'D':
                         for (int i = 0; i < distance; i++)
                         {
+                            ++step;
                             --posy;
-                            var pos = new Tuple<int, int>(posx, posy);
+                            var pos = new Koord(posx, posy, step);
                             _route.Add(pos);
                         }
                         break;
@@ -56,6 +69,7 @@ namespace Day3
 
 
         }
+
         static void Main(string[] args)
         {
             //string input1 = "R75,D30,R83,U83,L12,D49,R71,U7,L72";
@@ -66,30 +80,24 @@ namespace Day3
             string[] in2 = input2.Split(',');
             var route1 = CreateRoute(in1);
             var route2 = CreateRoute(in2);
-            var collisionPoints = route1.Intersect(route2);
-            //foreach (var point in route1)
-            //{
-            //    Console.Write("PosX: {0}, Posy: {1}    ",point.Item1,point.Item2);
-            //}
-            //Console.WriteLine();
-            //foreach (var point in route1)
-            //{
-            //    Console.Write("PosX: {0}, Posy: {1}    ", point.Item1, point.Item2);
-            //}
-            //Console.WriteLine();
-            foreach (var point in collisionPoints)
-            {
-                Console.WriteLine("Collisions: PosX: {0}, Posy: {1}", point.Item1, point.Item2);
-            }
-            Console.WriteLine();
             int minDistance = 987987987;
-            foreach (var point in collisionPoints)
-            {
-                var distance = Math.Abs(point.Item1) + Math.Abs(point.Item2);
-                if (distance < minDistance)
-                    minDistance = distance;
+            
+            for (int i=0;i<5000;i++)
+            {               
+                for (int j = 0; j < 5000; j++)
+                {
+                    //Console.WriteLine("x1: {0}, x2: {1}, y1: {2}, y2: {3}, step1: {4}, step2: {5}",route1[i].x,route2[j].x,route1[i].y,route2[j].y,route1[i].step,route2[j].step);
+                    if (route1[i].x == route2[j].x && route1[i].y == route2[j].y)
+                    {
+                        int distance = route1[i].step + route2[j].step;
+                        Console.WriteLine(distance);
+                        if (distance < minDistance) minDistance = distance;
+
+                    }
+                }
             }
             Console.WriteLine(minDistance);
+
         }
     }
 }
