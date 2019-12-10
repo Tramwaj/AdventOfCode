@@ -26,6 +26,10 @@ namespace Day6
             children.Add(child);
             Update();
         }
+        public void AddParent(Node _parent)
+        {
+            parent = _parent;
+        }
         //private void Update() { }
         internal void Update()
         {
@@ -51,7 +55,8 @@ namespace Day6
             }
             if (!tree.ContainsKey(parent)&&tree.ContainsKey(child))
             {
-                tree.Add(parent, new Node());                
+                tree.Add(parent, new Node());
+                tree[child].AddParent(tree[parent]);
             }
             tree[parent].AddChild(tree[child]);
             //++count;
@@ -60,8 +65,8 @@ namespace Day6
         static void Main(string[] args)
         {
             //Choose one:
-            //var Data =getData(); //real data
-            var Data = new List<string> { "COM)B", "B)C", "C)D", "D)E", "E)F", "B)G", "G)H", "D)I", "D)J", "J)K", "K)L", }; //sample data
+            var Data =getData(); //real data
+            //var Data = new List<string> { "COM)B", "B)C", "C)D", "D)E", "E)F", "B)G", "G)H", "D)I", "D)J", "J)K", "K)L", }; //sample data
             var tree = new Dictionary<string, Node>();
             foreach (var relationship in Data)
             {
@@ -74,21 +79,17 @@ namespace Day6
                     AddNodes(parentName, childName, tree);
                 }
             }
-            int sum=0;
-            foreach (var body in tree)
-            {
-                sum += body.Value.satellites;
-                //Console.WriteLine(body.Value.satellites.ToString());
-            }
-            Console.WriteLine(sum);
+            int sum=tree.Sum(x=>x.Value.satellites);
+            Console.WriteLine(sum);          
+           
         }
         
 
         static List<string> getData()
         {
             var data = new List<string> { };
-            //var path = @"C:\Users\Admin\source\repos\AdventOfCode\Day6\input.txt";
-            string path = @"C:\Users\User\source\repos\AoC19\Day6\input.txt";
+            var path = @"C:\Users\Admin\source\repos\AdventOfCode\Day6\input.txt";
+            //string path = @"C:\Users\User\source\repos\AoC19\Day6\input.txt";
            var file = new StreamReader(path);
             string line = file.ReadLine();
             data.Add(line);
