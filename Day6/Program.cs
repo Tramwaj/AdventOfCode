@@ -39,15 +39,12 @@ namespace Day6
     }
     class Program
     {
-        static int count=0;
         static void AddNodes(string parent, string child, Dictionary<string, Node> tree)
         {
             if (!tree.ContainsKey(parent) && !tree.ContainsKey(child))
             {
                 tree.Add(parent, new Node());
                 tree.Add(child, new Node(tree[parent]));
-                
-                //tree[parent].
             }
             if (tree.ContainsKey(parent)&&!tree.ContainsKey(child))
             {
@@ -58,9 +55,11 @@ namespace Day6
                 tree.Add(parent, new Node());
                 tree[child].AddParent(tree[parent]);
             }
-            tree[parent].AddChild(tree[child]);
-            //++count;
-            //Console.WriteLine("{0}: Parent {1} added child {2}",count,parent,child);
+            if (tree.ContainsKey(parent) && tree.ContainsKey(child))
+            {
+                tree[child].AddParent(tree[parent]);
+            }
+                tree[parent].AddChild(tree[child]);
         }
         static void Main(string[] args)
         {
@@ -72,15 +71,18 @@ namespace Day6
             {
                 if (relationship != null)
                 {
-                    var relation = relationship.Split(')');
-                    //Console.WriteLine(relation[0] + " / " + relation[1]);
+                    var relation = relationship.Split(')');                
                     string parentName = relation[0];
                     string childName = relation[1];
                     AddNodes(parentName, childName, tree);
                 }
             }
             int sum=tree.Sum(x=>x.Value.satellites);
-            Console.WriteLine(sum);          
+            Console.WriteLine(sum);
+            foreach (var item in tree)
+            {
+                Console.WriteLine("{0}: {1} satellites",item.Key,item.Value.satellites.ToString());
+            }
            
         }
         
@@ -88,8 +90,8 @@ namespace Day6
         static List<string> getData()
         {
             var data = new List<string> { };
-            var path = @"C:\Users\Admin\source\repos\AdventOfCode\Day6\input.txt";
-            //string path = @"C:\Users\User\source\repos\AoC19\Day6\input.txt";
+            //var path = @"C:\Users\Admin\source\repos\AdventOfCode\Day6\input.txt";
+            string path = @"C:\Users\User\source\repos\AoC19\Day6\input.txt";
            var file = new StreamReader(path);
             string line = file.ReadLine();
             data.Add(line);
