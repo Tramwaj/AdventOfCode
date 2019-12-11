@@ -2,6 +2,7 @@
 using System.IO;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 
 namespace Day6
 {
@@ -106,8 +107,7 @@ namespace Day6
         static List<string> getData()
         {
             var data = new List<string> { };
-            var path = @"C:\Users\Admin\source\repos\AdventOfCode\Day6\input.txt";
-            //string path = @"C:\Users\User\source\repos\AoC19\Day6\input.txt";
+            var path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "//input.txt";
             var file = new StreamReader(path);
             string line = file.ReadLine();
             data.Add(line);
