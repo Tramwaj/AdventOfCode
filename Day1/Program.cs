@@ -13,14 +13,17 @@ namespace AoC19_1
             {
                 int module = Convert.ToInt32(item);
                 sum += module / 3 - 2;
+                int fuelWeight = module / 3 - 2;
+                do
+                {
+                    fuelWeight = fuelWeight / 3 - 2;
+                    if (fuelWeight > 0)
+                        sum += fuelWeight;
+                } while (fuelWeight >= 0);
             }
-            int fuelWeight=sum;            
-            do
-            {
-                fuelWeight = fuelWeight / 3 - 2;
-                if (fuelWeight>0)
-                    sum += fuelWeight;                
-            } while (fuelWeight >= 0);
+            
+            
+            
             Console.WriteLine(sum);
         }
     }
