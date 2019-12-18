@@ -20,11 +20,7 @@ namespace Day5
             }
             return data;
         }
-        static bool IntCode(int userInput, int[] program)
-        {
-            
-            
-        }
+        //static bool IntCode(int userInput, int[] program)        {                 }
         static void Main(string[] args)
         {
             
