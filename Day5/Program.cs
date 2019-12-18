@@ -10,7 +10,6 @@ namespace Day5
         static int[] getData()
         {
             var path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)+"//input.txt";
-            //string path = @"C:\Users\User\source\repos\AoC19\Day6\input.txt";
             var file = new StreamReader(path);
             string line = file.ReadLine();
             Console.WriteLine(line);
@@ -21,25 +20,10 @@ namespace Day5
             }
             return data;
         }
-        static bool IntCode(int userInput, int[] input)
+        static bool IntCode(int userInput, int[] program)
         {
-            input[0] = userInput;;
-            int i = 0;            
-            do
-            {
-                if (input[i] == 99) break;
-                if (input[i] == 1)
-                {
-                    input[input[i + 3]] = input[input[i + 1]] + input[input[i + 2]];
-                    i += 4;
-                }
-                else if (input[i] == 2)
-                {
-                    input[input[i + 3]] = input[input[i + 1]] * input[input[i + 2]];
-                    i += 4;
-                }
-            }while (input[i]!=99)
-            return false;
+            
+            
         }
         static void Main(string[] args)
         {
