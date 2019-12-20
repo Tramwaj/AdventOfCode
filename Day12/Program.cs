@@ -45,15 +45,16 @@ namespace Day12
         static void Main(string[] args)
         {
             Console.WriteLine("Hello World!");
-            List<Moon> moons = Test1();
+            List<Moon> moons = Test2();
 
-            var moonArchive = new HashSet<string>();
+            //var moonArchive = new HashSet<string>();
+            //moonArchive.EnsureCapacity(46867749);
             //MoonSystem currentPos;// = new List<int[]>();
             string currentPos;
             
-            for (long i = 0; i < 10077417410; i++)
+            for (long i = 0; i < 4686774924; i++)
             {
-
+                
                 if (i % 1000000 == 0)
                 {
                     //Console.WriteLine("i={0}, t1(sum 4 strings): {1}, t2(search): {2}, t3(add currentPos): {3}, t4(moving moons): {4} ", i, time1.Elapsed, time2.Elapsed, time3.Elapsed, time4.Elapsed);
@@ -62,11 +63,11 @@ namespace Day12
                 
                 currentPos = moons[0].ToString() + moons[1].ToString() + moons[2].ToString() + moons[3].ToString();
                 //currentPos = new MoonSystem(moons[0], moons[1], moons[2], moons[3]);
-                
+                /*
                 if (moonArchive.Contains(currentPos)) { Console.WriteLine(i); break; }
                 
                 moonArchive.Add(currentPos);
-              
+              */
                 for (int j = 0; j < 3; j++)
                 {
                     for (int k = j; k < 4; k++)

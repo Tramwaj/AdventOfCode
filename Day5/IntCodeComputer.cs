@@ -41,9 +41,13 @@ namespace Day5
             if (mode1 == 0) param1 = program[program[counter + 1]];
             else param1 = program[counter+1];
             param2 = program[counter + 2];
-            bool paramIsZero= (param1 == 0);
-            if (paramIsZero && opcode == 5) counter = param2;
-            if (!paramIsZero && opcode == 6) counter = param2;
+            bool paramIsNotZero= (param1 == 0);
+            counter += 3;
+            if (paramIsNotZero && opcode == 5) counter = param2;
+            if (!paramIsNotZero && opcode == 6) counter = param2;
+
+            
+            if (mode2 == 1) Console.WriteLine("ERROR: Operation output address is in mode 1! counter: {0}",counter);
         }
         private void TernaryOperation(int mode1, int mode2, int mode3)
         {
@@ -62,7 +66,7 @@ namespace Day5
                 _result = param1 * param2;
             }
             if (opcode == 7) _result = Convert.ToInt32(param1 < param2);
-            if (opcode == 8) _result = Convert.ToInt32(param1 > param2);
+            if (opcode == 8) _result = Convert.ToInt32(param1 == param2);
             if (mode3 == 0) program[program[counter + 3]] = _result;
             if (mode3 == 1) program[counter + 3] = _result;
             counter += 4;
