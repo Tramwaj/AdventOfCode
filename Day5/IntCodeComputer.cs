@@ -31,7 +31,7 @@ namespace Day5
                 opcode = program[counter] % 100;
                 if (opcode == 99) break;
                 if (opcode <= 2 || opcode > 6) TernaryOperation(mode1, mode2, mode3);
-                if (opcode > 2) UnaryOperation(mode1);
+                if ((opcode > 2)&&(opcode<5)) UnaryOperation(mode1);
                 if (opcode == 5 || opcode == 6) BinaryOperation(mode1, mode2);
             } while (opcode != 99);
             return program[0];
@@ -41,7 +41,7 @@ namespace Day5
             if (mode1 == 0) param1 = program[program[counter + 1]];
             else param1 = program[counter+1];
             param2 = program[counter + 2];
-            bool paramIsNotZero= (param1 == 0);
+            bool paramIsNotZero= (param1 != 0);
             counter += 3;
             if (paramIsNotZero && opcode == 5) counter = param2;
             if (!paramIsNotZero && opcode == 6) counter = param2;

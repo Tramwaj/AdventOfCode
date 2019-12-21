@@ -7,26 +7,22 @@ namespace Day5
 {
     class Program
     {
-        static int[] getData()
+        static int[] GetData()
         {
             var path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)+"//input.txt";
             var file = new StreamReader(path);
-            string line = file.ReadLine();
-            //Console.WriteLine(line);
-            int[] data = line.Split(",").Select(x=>Convert.ToInt32(x)).ToArray();
-            //foreach (var inp in data)
-            //{
-            //    Console.WriteLine("{0}  ",inp);
-            //}
+            string line = file.ReadLine();            
+            int[] data = line.Split(",").Select(x=>Convert.ToInt32(x)).ToArray();        
+            file.Close();
             return data;
         }
         //static bool IntCode(int userInput, int[] program)        {                 }
         static void Main(string[] args)
         {
 
-             int[] input = getData();
-            //int[] input = { 1002, 4, 3, 4, 33 };
-            var computer = new IntCode(5, input);
+             int[] input = GetData();
+            //int[] input = { 3, 12, 6, 12, 15, 1, 13, 14, 13, 4, 13, 99, -1, 0, 1, 9 };
+            var computer = new IntCode(0, input);
             computer.Compute();
             //Console.WriteLine(input[0]);
             
