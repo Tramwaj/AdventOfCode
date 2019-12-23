@@ -6,16 +6,27 @@ namespace Day5
 {
     class IntCode
     {
+        int inputCounter = 0;
         int opcode, param1, param2;
-        public int input;
-        List<int> output;
+        public int[] input;
+        public List<int> output;
         int[] program;
         int counter = 0;
-        public IntCode(int _userInput, int[] _program)
+        public IntCode(int[] _userInput, int[] _program)
         {
             input = _userInput;
-            program = _program;
+            program = CopyArr(_program);            
             output = new List<int>();
+        }
+        private int[] CopyArr(int[] array)
+        {
+            int length = array.Length;
+            var copiedArr = new int[length];
+            for (int i = 0; i < length; i++)
+            {
+                copiedArr[i] = array[i];
+            }
+            return copiedArr;
         }
         public int Compute()
         {
@@ -31,30 +42,30 @@ namespace Day5
                 opcode = program[counter] % 100;
                 if (opcode == 99) break;
                 if (opcode <= 2 || opcode > 6) TernaryOperation(mode1, mode2, mode3);
-                if ((opcode > 2)&&(opcode<5)) UnaryOperation(mode1);
+                if ((opcode > 2) && (opcode < 5)) UnaryOperation(mode1);
                 if (opcode == 5 || opcode == 6) BinaryOperation(mode1, mode2);
             } while (opcode != 99);
             return program[0];
         }
-        private void BinaryOperation(int mode1,int mode2) //5 - jump if true, 6 - jump if false
+        private void BinaryOperation(int mode1, int mode2) //5 - jump if true, 6 - jump if false
         {
             if (mode1 == 0) param1 = program[program[counter + 1]];
-            else param1 = program[counter+1];
+            else param1 = program[counter + 1];
 
             param2 = program[counter + 2];
-            bool paramIsNotZero= (param1 != 0);
+            bool paramIsNotZero = (param1 != 0);
             int ptr = mode2 == 0 ? program[param2] : param2;
             counter += 3;
 
             if (paramIsNotZero && opcode == 5) counter = ptr;
             if (!paramIsNotZero && opcode == 6) counter = ptr;
 
-            
+
             //if (mode2 == 1) Console.WriteLine("ERROR: Operation output address is in mode 1! counter: {0}",counter);
         }
         private void TernaryOperation(int mode1, int mode2, int mode3)
         {
-            int _result = 1337;            
+            int _result = 1337;
             if (mode2 == 0) param2 = program[program[counter + 2]];
             else param2 = program[counter + 2];
             if (mode1 == 0) param1 = program[program[counter + 1]];
@@ -78,7 +89,7 @@ namespace Day5
         {
             if (opcode == 3)
             {
-                if (mode == 0) program[program[counter + 1]] = input;
+                if (mode == 0) program[program[counter + 1]] = input[inputCounter++];
                 if (mode == 1) Console.WriteLine("Cannot write to value");
             }
             if (opcode == 4)
@@ -87,9 +98,10 @@ namespace Day5
                 if (mode == 0) _out = program[program[counter + 1]];
                 if (mode == 1) _out = program[counter + 1];
                 output.Add(_out);
-                Console.WriteLine("Output no. {0}: {1}", output.Count, _out);
+                //Console.WriteLine("Output no. {0}: {1}", output.Count, _out);
             }
             counter += 2;
         }
     }
 }
+
