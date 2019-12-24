@@ -47,6 +47,7 @@ namespace Day5
             int[] inpucik = { 1, 0, 4, 3, 2 };
             int max = 0;
             int temp;
+            int licznik = 0;
             for (int i = 0; i < 5; i++)
             {
                 for (int j = 0; j < 5; j++)
@@ -62,6 +63,7 @@ namespace Day5
                                         {
                                             if (m != i && m != j && m != k && m != l)
                                             {
+                                                ++licznik;
                                                 inpucik[0] = i; inpucik[1] = j;
                                                 inpucik[2] = k; inpucik[3] = l;
                                                 inpucik[4] = m;
@@ -76,6 +78,7 @@ namespace Day5
                 }
             }
             Console.WriteLine("Result: {0}", max);
+            Console.WriteLine("Licznik: {0}", licznik);
             //TestLaunchCombination(inpucik,program);
 
         }

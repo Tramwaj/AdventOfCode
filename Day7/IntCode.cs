@@ -16,7 +16,7 @@ namespace Day5
         {
             input = _userInput;
             program = CopyArr(_program);            
-            output = new List<int>();
+            output = new List<int>();            
         }
         private int[] CopyArr(int[] array)
         {
