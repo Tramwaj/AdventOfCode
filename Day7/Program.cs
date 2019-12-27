@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 
 namespace Day5
 {
@@ -16,6 +18,44 @@ namespace Day5
             file.Close();
             return data;
         }
+        static List<int[]> GetAllSequences()
+        {
+            int licznik = 0;            
+            var allSequences = new List<int[]>();
+            for (int i = 0; i < 5; i++)
+            {
+                for (int j = 0; j < 5; j++)
+                {
+                    if (i != j)
+                        for (int k = 0; k < 5; k++)
+                        {
+                            if (k != j && k != i)
+                                for (int l = 0; l < 5; l++)
+                                {
+                                    if (l != j && l != k && l != i)
+                                        for (int m = 0; m < 5; m++)
+                                        {
+                                            if (m != i && m != j && m != k && m != l)
+                                            {
+                                                var sequence = new int[5];
+                                                ++licznik;
+                                                sequence[0]=i; sequence[1]=j;
+                                                sequence[2]=k; sequence[3]=l;
+                                                sequence[4]=m;
+                                                allSequences.Add(sequence);
+                                                foreach (var digit in sequence)
+                                                {
+                                                    Console.Write(digit + " ");
+                                                }
+                                                Console.WriteLine(licznik);
+                                            }
+                                        }
+                                }
+                        }
+                }
+            }            
+            return allSequences;
+        }        
         static int TestLaunchCombination(int[] seq, int[] program)
         {
             int[] userInput;
@@ -36,7 +76,7 @@ namespace Day5
             thrustE.Compute();
             Console.Write(thrustE.output.Last() + "   ");
             return thrustE.output.Last();
-        }
+        } 
         static void Main(string[] args)
         {
 
@@ -46,38 +86,22 @@ namespace Day5
             int[] inpucik = { 1, 0, 4, 3, 2 };
             int max = 0;
             int temp;
-            int licznik = 0;
-            for (int i = 0; i < 5; i++)
+            var allSequences = GetAllSequences();
+            foreach (var item in allSequences)
             {
-                for (int j = 0; j < 5; j++)
+                Console.WriteLine("Sequence:");
+                foreach (var digit in item)
                 {
-                    if (i != j)
-                        for (int k = 0; k < 5; k++)
-                        {
-                            if (k != j && k != i)
-                                for (int l = 0; l < 5; l++)
-                                {
-                                    if (l != j && l != k && l != i)
-                                        for (int m = 0; m < 5; m++)
-                                        {
-                                            if (m != i && m != j && m != k && m != l)
-                                            {
-                                                ++licznik;
-                                                inpucik[0] = i; inpucik[1] = j;
-                                                inpucik[2] = k; inpucik[3] = l;
-                                                inpucik[4] = m;
-                                                Console.Write("ijklm: {0} {1} {2} {3} {4} ---", i, j, k, l, m);
-                                                temp = TestLaunchCombination(inpucik, program);
-                                                if (temp > max) max = temp;
-                                            }
-                                        }
-                                }
-                        }
-
+                    Console.Write(digit + "  ");
                 }
+                
+                temp = TestLaunchCombination(item, program);
+                if (temp > max) max = temp;
             }
+            
+
             Console.WriteLine("Result: {0}", max);
-            Console.WriteLine("Licznik: {0}", licznik);
+            //Console.WriteLine("Licznik: {0}", licznik);
             //TestLaunchCombination(inpucik,program);
 
         }
