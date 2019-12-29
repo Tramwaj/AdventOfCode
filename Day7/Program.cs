@@ -14,69 +14,138 @@ namespace Day5
             var path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "//input.txt";
             var file = new StreamReader(path);
             string line = file.ReadLine();
-            int[] data = line.Split(",").Select(x => Convert.ToInt32(x)).ToArray();
+            var data = line.Split(",").Select(x => Convert.ToInt32(x)).ToArray();
             file.Close();
             return data;
         }
-        static List<int[]> GetAllSequences()
+        static List<int[]> GetAllSequences(int lowerBound, int upperBound)
         {
-            int licznik = 0;            
+            int licznik = 0;
             var allSequences = new List<int[]>();
-            for (int i = 0; i < 5; i++)
+            for (int i = lowerBound; i <= upperBound; i++)
             {
-                for (int j = 0; j < 5; j++)
+                for (int j = lowerBound; j <= upperBound; j++)
                 {
                     if (i != j)
-                        for (int k = 0; k < 5; k++)
+                        for (int k = lowerBound; k <= upperBound; k++)
                         {
                             if (k != j && k != i)
-                                for (int l = 0; l < 5; l++)
+                                for (int l = lowerBound; l <= upperBound; l++)
                                 {
                                     if (l != j && l != k && l != i)
-                                        for (int m = 0; m < 5; m++)
+                                        for (int m = lowerBound; m <= upperBound; m++)
                                         {
                                             if (m != i && m != j && m != k && m != l)
                                             {
                                                 var sequence = new int[5];
                                                 ++licznik;
-                                                sequence[0]=i; sequence[1]=j;
-                                                sequence[2]=k; sequence[3]=l;
-                                                sequence[4]=m;
+                                                sequence[0] = i; sequence[1] = j;
+                                                sequence[2] = k; sequence[3] = l;
+                                                sequence[4] = m;
                                                 allSequences.Add(sequence);
-                                                foreach (var digit in sequence)
-                                                {
-                                                    Console.Write(digit + " ");
-                                                }
-                                                Console.WriteLine(licznik);
+                                                //TestSequences(sequence,licznik);
                                             }
                                         }
                                 }
                         }
                 }
-            }            
+            }
             return allSequences;
-        }        
-        static int TestLaunchCombination(int[] seq, int[] program)
+        }
+        static void TestSequences(int[] sequence, int licznik)
         {
-            int[] userInput;
-            userInput = new int[2] { seq[0], 0 };
+            foreach (var digit in sequence)
+            {
+                Console.Write(digit + " ");
+            }
+            Console.WriteLine(licznik);
+        }
+        static int TestLaunchCombination(int[] sequence, int[] program)
+        {
+            List<int> userInput;
+            userInput = new List<int> { sequence[0], 0 };
             var thrustA = new IntCode(userInput, program);
             thrustA.Compute();
-            userInput = new int[2] { seq[1], thrustA.output.Last() };
+            userInput = new List<int> { sequence[1], thrustA.Output.Last() };
             var thrustB = new IntCode(userInput, program);
             thrustB.Compute();
-            userInput = new int[2] { seq[2], thrustB.output.Last() };
+            userInput = new List<int> { sequence[2], thrustB.Output.Last() };
             var thrustC = new IntCode(userInput, program);
             thrustC.Compute();
-            userInput = new int[2] { seq[3], thrustC.output.Last() };
+            userInput = new List<int> { sequence[3], thrustC.Output.Last() };
             var thrustD = new IntCode(userInput, program);
             thrustD.Compute();
-            userInput = new int[2] { seq[4], thrustD.output.Last() };
+            userInput = new List<int> { sequence[4], thrustD.Output.Last() };
             var thrustE = new IntCode(userInput, program);
             thrustE.Compute();
-            Console.Write(thrustE.output.Last() + "   ");
-            return thrustE.output.Last();
-        } 
+            Console.Write(thrustE.Output.Last() + "   ");
+            return thrustE.Output.Last();
+        }
+        static int TestLaunchCombinationWithFeedback(int[] sequence, int[] program)
+        {
+            var thrustA = new IntCode(new List<int> { sequence[0],0 }, program);
+            //Console.WriteLine("Computing:");
+            thrustA.Compute();
+            //Console.WriteLine("thrustB:");
+            var thrustB = new IntCode(new List<int> { sequence[1] }, program);
+            thrustB.Compute();
+            var thrustC = new IntCode(new List<int> { sequence[2] }, program);
+            thrustC.Compute();
+            var thrustD = new IntCode(new List<int> { sequence[3] }, program);
+            thrustD.Compute();
+            var thrustE = new IntCode(new List<int> { sequence[4] }, program);
+            thrustE.Compute();
+            var feedBack = new List<int> { 0 };
+            do
+            {
+                Console.WriteLine("thrustA:");
+                thrustA.ComputeWithNewInput(feedBack);
+                TestOutput(thrustA.Output);
+                Console.WriteLine("thrustB:");                
+                thrustB.ComputeWithNewInput(thrustA.Output);
+                TestOutput(thrustB.Output);
+                Console.WriteLine("thrustC:");
+                thrustC.ComputeWithNewInput(thrustB.Output);
+                TestOutput(thrustC.Output);
+                Console.WriteLine("thrustD:");
+                thrustD.ComputeWithNewInput(thrustC.Output);
+                TestOutput(thrustD.Output);
+                Console.WriteLine("thrustE:");
+                thrustE.ComputeWithNewInput(thrustD.Output);
+                TestOutput(thrustE.Output);
+                if (thrustE != null) feedBack = thrustE.Output;
+                Console.Write("tst ");
+            } while (thrustE != null);
+            TestLaunchCombinationWithFeedback(thrustE.Output, sequence);
+            return thrustE.Output.Last();
+        }
+        static void TestOutput(List<int> output)
+        {
+            Console.Write("output:");
+            foreach (var outP in output)
+            {
+                Console.Write(outP + ", ");
+            };
+            Console.WriteLine();
+        }
+        static void TestLaunchCombinationWithFeedback(List<int> output, int[] sequence)
+        {
+            Console.Write("Sequence: ");
+            foreach (var digit in sequence)
+            {
+                Console.Write(digit + " ");
+            }
+            Console.WriteLine();
+            Console.Write("Output: ");
+            if (output != null)
+            {
+                foreach (var outP in output)
+                {
+                    Console.Write(outP + " ");
+                }
+            }
+            Console.WriteLine();
+        }
         static void Main(string[] args)
         {
 
@@ -86,19 +155,20 @@ namespace Day5
             int[] inpucik = { 1, 0, 4, 3, 2 };
             int max = 0;
             int temp;
-            var allSequences = GetAllSequences();
-            foreach (var item in allSequences)
+            var allSequences = GetAllSequences(5, 9);
+            foreach (var sequence in allSequences)
             {
                 Console.WriteLine("Sequence:");
-                foreach (var digit in item)
+                foreach (var digit in sequence)
                 {
                     Console.Write(digit + "  ");
                 }
-                
-                temp = TestLaunchCombination(item, program);
+
+                //temp = TestLaunchCombinationWithFeedback(sequence, program);
+                temp = TestLaunchCombinationWithFeedback(sequence, program);
                 if (temp > max) max = temp;
             }
-            
+
 
             Console.WriteLine("Result: {0}", max);
             //Console.WriteLine("Licznik: {0}", licznik);

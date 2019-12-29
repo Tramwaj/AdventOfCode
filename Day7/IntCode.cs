@@ -8,15 +8,25 @@ namespace Day5
     {
         int inputCounter = 0;
         int opcode, param1, param2;
-        public int[] input;
-        public List<int> output;
+        public List<int> Input;
+        public List<int> Output;
         int[] program;
         int counter = 0;
-        public IntCode(int[] _userInput, int[] _program)
+        bool endCalc = false;
+        public IntCode(List<int> _userInput, int[] _program)
         {
-            input = _userInput;
-            program = CopyArr(_program);            
-            output = new List<int>();            
+            Input = _userInput;
+            program = CopyArr(_program);
+            Output = new List<int>();
+        }
+        public void ComputeWithNewInput(List<int> _userInput)
+        {
+            Input=_userInput;
+            counter = 0;
+            inputCounter = 0;
+            endCalc = false;
+            //Output = null;
+            Compute();
         }
         private int[] CopyArr(int[] array)
         {
@@ -40,7 +50,7 @@ namespace Day5
                 ABCDE -= mode2 * 1000;
                 mode1 = ABCDE / 100;
                 opcode = program[counter] % 100;
-                if (opcode == 99) break;
+                if ((opcode == 99)||(endCalc==true)) break;
                 if (opcode <= 2 || opcode > 6) TernaryOperation(mode1, mode2, mode3);
                 if ((opcode > 2) && (opcode < 5)) UnaryOperation(mode1);
                 if (opcode == 5 || opcode == 6) BinaryOperation(mode1, mode2);
@@ -89,7 +99,8 @@ namespace Day5
         {
             if (opcode == 3)
             {
-                if (mode == 0) program[program[counter + 1]] = input[inputCounter++];
+                if (mode == 0) program[program[counter + 1]] = Input[inputCounter++];
+                if (inputCounter == Input.Count - 1) endCalc=true ;
                 if (mode == 1) Console.WriteLine("Cannot write to value");
             }
             if (opcode == 4)
@@ -97,7 +108,7 @@ namespace Day5
                 int _out = 1337;
                 if (mode == 0) _out = program[program[counter + 1]];
                 if (mode == 1) _out = program[counter + 1];
-                output.Add(_out);
+                Output.Add(_out);
                 //Console.WriteLine("Output no. {0}: {1}", output.Count, _out);
             }
             counter += 2;
